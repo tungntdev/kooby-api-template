@@ -1,7 +1,7 @@
 package io.github.jonaskahn
 
-import io.github.jonaskahn.app.controller.HealthController
-import io.github.jonaskahn.app.controller.users.UserController
+import io.github.jonaskahn.controller.HealthController
+import io.github.jonaskahn.controller.users.UserController
 import io.github.jonaskahn.assistant.Language
 import io.github.jonaskahn.assistant.Response
 import io.github.jonaskahn.exception.LogicException
@@ -38,7 +38,7 @@ fun Kooby.setup() {
 
     install(HikariModule())
     install(FlywayModule())
-    install(HibernateModule().scan("io.github.jonaskahn.app.entities"))
+    install(HibernateModule().scan("io.github.jonaskahn.entities"))
     use(TransactionalRequest().enabledByDefault(false))
 
     install(
