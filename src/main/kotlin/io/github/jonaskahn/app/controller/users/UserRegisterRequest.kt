@@ -2,7 +2,7 @@ package io.github.jonaskahn.app.controller.users
 
 import com.fasterxml.jackson.annotation.JsonAlias
 
-class RegisterUserRequest {
+class UserRegisterRequest {
     @field:JsonAlias("full_name", "fullName")
     val name: String? = null
     val email: String? = null

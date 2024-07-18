@@ -1,6 +1,6 @@
 package io.github.jonaskahn.app.services.user
 
-import io.github.jonaskahn.app.controller.users.RegisterUserRequest
+import io.github.jonaskahn.app.controller.users.UserRegisterRequest
 import io.github.jonaskahn.app.entities.User
 import io.github.jonaskahn.app.entities.enums.Status
 import io.github.jonaskahn.app.repositories.UserRepository
@@ -14,7 +14,7 @@ internal class UserServiceImpl @Inject constructor(
     private val passwordEncoder: PasswordEncoder,
 ) : UserService {
 
-    override fun createUser(request: RegisterUserRequest) {
+    override fun createUser(request: UserRegisterRequest) {
         if (userRepository.existsByUsernameOrEmail(request.username, request.email)) {
             throw UserExistException()
         }

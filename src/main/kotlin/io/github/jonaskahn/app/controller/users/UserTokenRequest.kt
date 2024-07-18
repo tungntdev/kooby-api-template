@@ -1,11 +1,11 @@
-package io.github.jonaskahn.app.controller.authen
+package io.github.jonaskahn.app.controller.users
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class TokenRequest(
+data class UserTokenRequest(
     val username: String? = null,
     val password: String? = null,
     val rememberMe: Boolean = false,

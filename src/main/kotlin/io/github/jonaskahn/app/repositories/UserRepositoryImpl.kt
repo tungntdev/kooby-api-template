@@ -2,8 +2,10 @@ package io.github.jonaskahn.app.repositories
 
 import io.github.jonaskahn.app.entities.User
 import jakarta.inject.Inject
+import jakarta.inject.Singleton
 import jakarta.persistence.EntityManager
 
+@Singleton
 class UserRepositoryImpl @Inject constructor(
     private val em: EntityManager
 ) : UserRepository {

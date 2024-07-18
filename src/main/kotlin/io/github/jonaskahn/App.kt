@@ -1,7 +1,6 @@
 package io.github.jonaskahn
 
 import io.github.jonaskahn.app.controller.HealthController
-import io.github.jonaskahn.app.controller.authen.AuthenticationController
 import io.github.jonaskahn.app.controller.users.UserController
 import io.github.jonaskahn.assistant.Language
 import io.github.jonaskahn.assistant.Response
@@ -18,6 +17,10 @@ import io.jooby.jackson.JacksonModule
 import io.jooby.kt.Kooby
 import io.jooby.kt.runApp
 import io.jooby.netty.NettyServer
+import io.jooby.pac4j.Pac4jModule
+import org.pac4j.http.client.direct.ParameterClient
+import org.pac4j.jwt.config.signature.SecretSignatureConfiguration
+import org.pac4j.jwt.credentials.authenticator.JwtAuthenticator
 
 
 class App : Kooby({
@@ -36,19 +39,20 @@ fun Kooby.setup() {
     install(HikariModule())
     install(FlywayModule())
     install(HibernateModule().scan("io.github.jonaskahn.app.entities"))
-    use(TransactionalRequest().enabledByDefault(true))
+    use(TransactionalRequest().enabledByDefault(false))
 
-//    install(Pac4jModule()
-//        .client("/api/*") {
-//            val client = ParameterClient(
-//                "token",
-//                JwtAuthenticator(SecretSignatureConfiguration(it.getString("jwt.salt")))
-//            )
-//            client.isSupportGetRequest = true;
-//            client.isSupportPostRequest = true;
-//            client
-//        }
-//    )
+    install(
+        Pac4jModule()
+            .client("/api/*") {
+                val client = ParameterClient(
+                    "token",
+                    JwtAuthenticator(SecretSignatureConfiguration(it.getString("jwt.salt")))
+                )
+                client.isSupportGetRequest = true;
+                client.isSupportPostRequest = true;
+                client
+            }
+    )
     setContextAsService(true);
 }
 
@@ -106,9 +110,8 @@ private fun getStatusCodeAndMessage(ex: Throwable): Triple<StatusCode, String, A
 }
 
 fun Kooby.routes() {
-    mvc(HealthController())
+    mvc(HealthController::class.java)
     mvc(UserController::class.java)
-    mvc(AuthenticationController::class.java)
 }
 
 fun main(args: Array<String>) {
