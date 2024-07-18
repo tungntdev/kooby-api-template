@@ -1,2 +1,2 @@
-# kooby-api-template
-A working example template using Kooby to build backend with JWT supported by default
+# kooby-template
+Just a great Jooby example project in Kotlin
