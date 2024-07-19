@@ -1,11 +1,10 @@
 package io.github.jonaskahn.repositories
 
 import io.github.jonaskahn.entities.User
+import io.github.jonaskahn.entities.enums.StatusCode
 import jakarta.inject.Inject
-import jakarta.inject.Singleton
 import jakarta.persistence.EntityManager
 
-@Singleton
 class UserRepositoryImpl @Inject constructor(
     private val em: EntityManager
 ) : UserRepository {
@@ -14,6 +13,16 @@ class UserRepositoryImpl @Inject constructor(
         val query =
             em.createQuery("select u from users u where username = :username or email = :username", User::class.java)
         query.setParameter("username", username)
+        return query.singleResult
+    }
+
+    override fun findActivatedUserByPreferredUsername(preferredUsername: Long): User? {
+        val query =
+            em.createQuery(
+                "select u from users u where preferredUsername = :preferredUsername and status = ${StatusCode.ACTIVATED}",
+                User::class.java
+            )
+        query.setParameter("preferredUsername", preferredUsername)
         return query.singleResult
     }
 

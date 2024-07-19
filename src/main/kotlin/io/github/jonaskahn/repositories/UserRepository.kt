@@ -7,6 +7,8 @@ import io.github.jonaskahn.entities.User
 interface UserRepository {
     fun findByUsernameOrEmail(username: String): User?
 
+    fun findActivatedUserByPreferredUsername(preferredUsername: Long): User?
+
     fun existsByUsernameOrEmail(username: String?, email: String?): Boolean
 
     fun save(user: User)

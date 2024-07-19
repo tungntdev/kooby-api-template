@@ -29,15 +29,10 @@ services:
     networks:
       - app
   cache-01:
-    image: eqalpha/keydb:latest
+    image: redis:7.2
     container_name: cache-01
     restart: unless-stopped
     ports:
       - "6389:6379"
-    command:
-      - keydb-server
-      - /etc/keydb/keydb.conf
-      - --server-threads 4
-      - --requirepass dev
     networks:
       - app

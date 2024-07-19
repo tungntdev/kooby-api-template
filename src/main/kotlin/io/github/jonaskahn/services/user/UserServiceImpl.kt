@@ -1,17 +1,21 @@
 package io.github.jonaskahn.services.user
 
-import io.github.jonaskahn.controller.users.UserRegisterRequest
+import io.github.jonaskahn.constants.Jwt
+import io.github.jonaskahn.controller.auth.UserRegisterRequest
 import io.github.jonaskahn.entities.User
 import io.github.jonaskahn.entities.enums.Status
+import io.github.jonaskahn.exception.ShouldNeverOccurException
 import io.github.jonaskahn.repositories.UserRepository
 import io.github.jonaskahn.services.authen.PasswordEncoder
+import io.hypersistence.tsid.TSID
+import io.jooby.Context
 import jakarta.inject.Inject
-import jakarta.inject.Singleton
+import org.pac4j.core.profile.BasicUserProfile
 
-@Singleton
 internal class UserServiceImpl @Inject constructor(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
+    private val context: Context
 ) : UserService {
 
     override fun createUser(request: UserRegisterRequest) {
@@ -23,7 +27,17 @@ internal class UserServiceImpl @Inject constructor(
         newUser.username = request.username ?: request.email
         newUser.fullName = request.name
         newUser.password = passwordEncoder.encode(request.password!!)
-        newUser.status = Status.LOCK
+        newUser.preferredUsername = TSID.fast().toLong()
+        newUser.status = Status.ACTIVATED
         userRepository.save(newUser)
+    }
+
+    override fun getCurrentUserInfo(): UserInfoDto {
+        val userProfile = context.getUser<BasicUserProfile>()
+        val preferredUsername =
+            userProfile?.getAttribute(Jwt.Attribute.UID)?.toString() ?: throw ShouldNeverOccurException()
+        val user = userRepository.findActivatedUserByPreferredUsername(preferredUsername.toLong())
+            ?: throw UserNotFoundException()
+        return UserToInfoDtoMapper.INSTANCE.userToUserInfoDto(user)
     }
 }

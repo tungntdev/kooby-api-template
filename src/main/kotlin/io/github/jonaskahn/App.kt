@@ -1,10 +1,15 @@
 package io.github.jonaskahn
 
-import io.github.jonaskahn.controller.HealthController
-import io.github.jonaskahn.controller.users.UserController
 import io.github.jonaskahn.assistant.Language
 import io.github.jonaskahn.assistant.Response
+import io.github.jonaskahn.controller.HealthController
+import io.github.jonaskahn.controller.auth.AuthController
+import io.github.jonaskahn.controller.user.UserController
+import io.github.jonaskahn.exception.AuthorizationException
+import io.github.jonaskahn.exception.ForbiddenAccessException
 import io.github.jonaskahn.exception.LogicException
+import io.github.jonaskahn.middlewares.AdvancedJwtAuthenticator
+import io.github.jonaskahn.middlewares.JedisModule
 import io.jooby.MediaType
 import io.jooby.OpenAPIModule
 import io.jooby.StatusCode
@@ -18,9 +23,9 @@ import io.jooby.kt.Kooby
 import io.jooby.kt.runApp
 import io.jooby.netty.NettyServer
 import io.jooby.pac4j.Pac4jModule
-import org.pac4j.http.client.direct.ParameterClient
+import org.pac4j.http.client.direct.HeaderClient
 import org.pac4j.jwt.config.signature.SecretSignatureConfiguration
-import org.pac4j.jwt.credentials.authenticator.JwtAuthenticator
+import redis.clients.jedis.JedisPooled
 
 
 class App : Kooby({
@@ -36,24 +41,30 @@ fun Kooby.setup() {
 
     install(GuiceModule())
 
+    install(JedisModule())
+
     install(HikariModule())
     install(FlywayModule())
     install(HibernateModule().scan("io.github.jonaskahn.entities"))
-    use(TransactionalRequest().enabledByDefault(false))
+    use(TransactionalRequest().enabledByDefault(true))
+
 
     install(
         Pac4jModule()
             .client("/api/*") {
-                val client = ParameterClient(
-                    "token",
-                    JwtAuthenticator(SecretSignatureConfiguration(it.getString("jwt.salt")))
+                val client = HeaderClient(
+                    "Authorization",
+                    "Bearer ",
+                    AdvancedJwtAuthenticator(
+                        require(JedisPooled::class.java),
+                        SecretSignatureConfiguration(it.getString("jwt.salt"))
+                    )
                 )
-                client.isSupportGetRequest = true;
-                client.isSupportPostRequest = true;
                 client
             }
     )
-    setContextAsService(true);
+
+    setContextAsService(true)
 }
 
 fun Kooby.decorate() {
@@ -78,10 +89,10 @@ fun Kooby.decorate() {
             return@after
         }
         val ex = failure as Throwable
-        log.error("Something went wrong. detail\n", ex)
+        log.error("Error: \n", ex)
         val (statusCode, message, variables) = getStatusCodeAndMessage(ex)
         ctx.responseCode = statusCode
-        ctx.render(Response.fail(Language.of(acceptLanguage, message, *variables)))
+        ctx.render(Response.fail(code = statusCode, message = Language.of(acceptLanguage, message, *variables)))
     }
 }
 
@@ -89,6 +100,14 @@ private fun getStatusCodeAndMessage(ex: Throwable): Triple<StatusCode, String, A
     return when (ex) {
         is LogicException -> {
             Triple(StatusCode.BAD_REQUEST, ex.message, ex.variables)
+        }
+
+        is AuthorizationException -> {
+            Triple(StatusCode.UNAUTHORIZED, "app.common.exception.AuthorizationException", arrayOf())
+        }
+
+        is ForbiddenAccessException -> {
+            Triple(StatusCode.FORBIDDEN, "app.common.exception.forbidden", arrayOf())
         }
 
         is IllegalArgumentException -> {
@@ -111,6 +130,7 @@ private fun getStatusCodeAndMessage(ex: Throwable): Triple<StatusCode, String, A
 
 fun Kooby.routes() {
     mvc(HealthController::class.java)
+    mvc(AuthController::class.java)
     mvc(UserController::class.java)
 }
 

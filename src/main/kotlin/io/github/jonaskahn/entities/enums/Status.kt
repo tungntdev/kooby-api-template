@@ -3,10 +3,10 @@ package io.github.jonaskahn.entities.enums
 import com.fasterxml.jackson.annotation.JsonValue
 
 enum class Status(@get:JsonValue val id: Int, val description: String) {
-    INACTIVATED(StatusCode.INACTIVATED, "tortoise.common.enum.status.inactive"),
-    ACTIVATED(StatusCode.ACTIVATED, "tortoise.common.enum.status.active"),
-    LOCK(StatusCode.LOCK, "tortoise.common.enum.status.lock"),
-    DELETED(StatusCode.DELETED, "tortoise.common.enum.status.deleted");
+    INACTIVATED(StatusCode.INACTIVATED, "app.common.enum.status.inactive"),
+    ACTIVATED(StatusCode.ACTIVATED, "app.common.enum.status.active"),
+    LOCK(StatusCode.LOCK, "app.common.enum.status.lock"),
+    DELETED(StatusCode.DELETED, "app.common.enum.status.deleted");
 
     companion object {
         private val valuesAsMap = entries.associateBy { it.id }
