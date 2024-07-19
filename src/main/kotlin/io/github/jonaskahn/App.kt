@@ -3,6 +3,7 @@ package io.github.jonaskahn
 import io.github.jonaskahn.assistant.Language
 import io.github.jonaskahn.assistant.Response
 import io.github.jonaskahn.controller.HealthController
+import io.github.jonaskahn.controller.TestRoleController
 import io.github.jonaskahn.controller.auth.AuthController
 import io.github.jonaskahn.controller.user.UserController
 import io.github.jonaskahn.exception.AuthorizationException
@@ -132,6 +133,7 @@ fun Kooby.routes() {
     mvc(HealthController::class.java)
     mvc(AuthController::class.java)
     mvc(UserController::class.java)
+    mvc(TestRoleController::class.java)
 }
 
 fun main(args: Array<String>) {
