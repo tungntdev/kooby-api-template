@@ -10,7 +10,7 @@ Just a working Jooby API example project in Kotlin
 - [x] Using MapStruct for Object Mapper
 - [x] Using Guice as Dependency Injection Framework
 - [x] Multiple language support
-- [x] Default admin user: `admin/admin`
+- [x] Default admin user: `admin@localhost/admin`
 
 ## Default API
 1. Create users 
