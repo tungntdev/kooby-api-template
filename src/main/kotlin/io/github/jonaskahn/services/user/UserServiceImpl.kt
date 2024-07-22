@@ -40,4 +40,12 @@ internal class UserServiceImpl @Inject constructor(
             ?: throw UserNotFoundException()
         return UserToInfoDtoMapper.INSTANCE.userToUserInfoDto(user)
     }
+
+    override fun getCurrentUserInfoWithExecutor(): UserInfoDto {
+        val userProfile = context.getUser<BasicUserProfile>()
+        val preferredUsername =
+            userProfile?.getAttribute(Jwt.Attribute.UID)?.toString() ?: throw ShouldNeverOccurException()
+        return userRepository.findCustomActivatedUserByPreferredUsername(preferredUsername.toLong())
+            ?: throw UserNotFoundException()
+    }
 }

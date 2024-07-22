@@ -8,4 +8,6 @@ interface UserService {
     fun createUser(request: UserRegisterRequest)
 
     fun getCurrentUserInfo(): UserInfoDto
+
+    fun getCurrentUserInfoWithExecutor(): UserInfoDto
 }

@@ -1,7 +1,9 @@
 package io.github.jonaskahn.repositories
 
+import io.github.jonaskahn.assistant.query.JpaQueryExecutor
 import io.github.jonaskahn.entities.User
 import io.github.jonaskahn.entities.enums.StatusCode
+import io.github.jonaskahn.services.user.UserInfoDto
 import jakarta.inject.Inject
 import jakarta.persistence.EntityManager
 
@@ -45,5 +47,14 @@ class UserRepositoryImpl @Inject constructor(
 
     override fun save(user: User) {
         em.persist(user)
+    }
+
+    override fun findCustomActivatedUserByPreferredUsername(preferredUsername: Long): UserInfoDto? {
+        val query =
+            em.createNativeQuery("select * from users where preferred_username = :preferredUsername and status = ${StatusCode.ACTIVATED}")
+        return JpaQueryExecutor.builder<UserInfoDto>()
+            .with(query, mutableMapOf("preferredUsername" to preferredUsername))
+            .map(UserInfoDto::class.java)
+            .getSingleResult()
     }
 }

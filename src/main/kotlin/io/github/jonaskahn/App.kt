@@ -14,6 +14,8 @@ import io.github.jonaskahn.middlewares.JedisModule
 import io.jooby.MediaType
 import io.jooby.OpenAPIModule
 import io.jooby.StatusCode
+import io.jooby.exception.NotFoundException
+import io.jooby.exception.UnauthorizedException
 import io.jooby.flyway.FlywayModule
 import io.jooby.guice.GuiceModule
 import io.jooby.hibernate.HibernateModule
@@ -27,7 +29,6 @@ import io.jooby.pac4j.Pac4jModule
 import org.pac4j.http.client.direct.HeaderClient
 import org.pac4j.jwt.config.signature.SecretSignatureConfiguration
 import redis.clients.jedis.JedisPooled
-
 
 class App : Kooby({
     setup()
@@ -52,7 +53,7 @@ fun Kooby.setup() {
 
     install(
         Pac4jModule()
-            .client("*/secure/*") {
+            .client("/api/secure/*") {
                 HeaderClient(
                     "Authorization",
                     "Bearer ",
@@ -102,7 +103,11 @@ private fun getStatusCodeAndMessage(ex: Throwable): Triple<StatusCode, String, A
             Triple(StatusCode.BAD_REQUEST, ex.message, ex.variables)
         }
 
-        is AuthorizationException -> {
+        is NotFoundException -> {
+            Triple(StatusCode.NOT_FOUND, "app.common.exception.notfound", arrayOf())
+        }
+
+        is AuthorizationException, is UnauthorizedException -> {
             Triple(StatusCode.UNAUTHORIZED, "app.common.exception.AuthorizationException", arrayOf())
         }
 
@@ -129,10 +134,13 @@ private fun getStatusCodeAndMessage(ex: Throwable): Triple<StatusCode, String, A
 }
 
 fun Kooby.routes() {
-    mvc(HealthController::class.java)
-    mvc(AuthController::class.java)
-    mvc(UserController::class.java)
-    mvc(TestRoleController::class.java)
+    mount("/api", object : Kooby({
+        install(JacksonModule())
+        mvc(HealthController::class.java)
+        mvc(AuthController::class.java)
+        mvc(UserController::class.java)
+        mvc(TestRoleController::class.java)
+    }) {})
 }
 
 fun main(args: Array<String>) {

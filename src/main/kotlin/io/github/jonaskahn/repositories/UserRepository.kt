@@ -2,6 +2,7 @@ package io.github.jonaskahn.repositories
 
 import com.google.inject.ImplementedBy
 import io.github.jonaskahn.entities.User
+import io.github.jonaskahn.services.user.UserInfoDto
 
 @ImplementedBy(UserRepositoryImpl::class)
 interface UserRepository {
@@ -12,4 +13,6 @@ interface UserRepository {
     fun existsByUsernameOrEmail(username: String?, email: String?): Boolean
 
     fun save(user: User)
+
+    fun findCustomActivatedUserByPreferredUsername(preferredUsername: Long): UserInfoDto?
 }

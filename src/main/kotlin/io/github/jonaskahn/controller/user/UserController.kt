@@ -6,11 +6,16 @@ import io.jooby.annotation.GET
 import io.jooby.annotation.Path
 import jakarta.inject.Inject
 
-@Path("/api/user/secure")
+@Path
 class UserController @Inject constructor(private val userService: UserService) {
 
-    @GET("/info")
+    @GET("/secure/user/info")
     fun info(): UserInfoDto {
         return userService.getCurrentUserInfo()
+    }
+
+    @GET("/secure/user/info-with-executor")
+    fun getInfo(): UserInfoDto {
+        return userService.getCurrentUserInfoWithExecutor()
     }
 }

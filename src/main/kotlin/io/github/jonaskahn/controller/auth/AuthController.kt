@@ -7,23 +7,23 @@ import io.jooby.annotation.POST
 import io.jooby.annotation.Path
 import jakarta.inject.Inject
 
-@Path("/api/auth")
+@Path
 class AuthController @Inject constructor(
     private val userService: UserService,
     private val authenticationService: AuthenticationService
 ) {
 
-    @POST("/generate-token")
+    @POST("/auth/generate-token")
     fun generateToken(request: GenerateTokenRequest): String {
         return authenticationService.generateToken(request.username!!, request.password!!)
     }
 
-    @POST("/register")
+    @POST("/auth/register")
     fun register(request: UserRegisterRequest) {
         userService.createUser(request)
     }
 
-    @DELETE("/secure/logout")
+    @DELETE("/secure/auth/logout")
     fun logout() {
         authenticationService.logout()
     }
