@@ -131,7 +131,7 @@ internal class AccessVerifierImpl @Inject constructor(private val context: Conte
 - `hasRole` or `hasAnyRoles` will check and return `true`/`false`, while `requireRole` and `requireAnyRoles` will explicitly throw exception if you do not have access.
 
 ### [JpaQueryExecutor](src/main/kotlin/io/github/jonaskahn/assistant/query/JpaQueryExecutor.kt)
-- **Problem**: Something we want to retrieve data from database via native query, but we do not want manually do mapping value to field from result to pojo class. 
+- **Problem**: Sometimes we want to retrieve data from database via native query, but we do not want manually do mapping value to field from result to pojo class. 
 - To solve this problem we have so many ways to get it through, because of using Hibernate. I create JPA Query Executor to parse sql result to object via Jackson
 ```kotlin
 class UserRepositoryImpl @Inject constructor(
