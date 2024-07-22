@@ -9,8 +9,8 @@ import io.github.jonaskahn.controller.user.UserController
 import io.github.jonaskahn.exception.AuthorizationException
 import io.github.jonaskahn.exception.ForbiddenAccessException
 import io.github.jonaskahn.exception.LogicException
+import io.github.jonaskahn.extensions.JedisModule
 import io.github.jonaskahn.middlewares.AdvancedJwtAuthenticator
-import io.github.jonaskahn.middlewares.JedisModule
 import io.jooby.MediaType
 import io.jooby.OpenAPIModule
 import io.jooby.StatusCode

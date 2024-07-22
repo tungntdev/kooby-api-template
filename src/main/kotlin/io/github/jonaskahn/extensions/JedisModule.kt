@@ -1,4 +1,4 @@
-package io.github.jonaskahn.middlewares
+package io.github.jonaskahn.extensions
 
 import io.jooby.Extension
 import io.jooby.Jooby
