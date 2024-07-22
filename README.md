@@ -1,5 +1,6 @@
-# Kooby API Teamplate
-Just a working Jooby API example project in Kotlin
+# Why Kooby?
+- Fast, light, easy to learn
+- I've been using Spring for almost my wokring time with Java/Kotlin. For large scale enterprise projects, Spring Stacks are undoubtedly the way to go, but for minimal projects, Kooby is a good choice.
 
 ## Which's included?
 - [x] Support Default JWT
