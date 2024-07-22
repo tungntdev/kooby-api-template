@@ -74,9 +74,9 @@ install(
     )
 ```
 1. Using `HeaderClient` to tell Jooby read `Bearer` token from header
-2. By default Jooby use introduced `JwtAuthenticator` from Pac4j, the problems are:
+2. By default Jooby use the `JwtAuthenticator` from Pac4j, the problems are:
    - Token is completed stateless
-   - What if user is lock/inactivated/deleted -> token may still valid by the `exp`
+   - What if user is lock/inactivated/deleted -> token may still valid by the `exp` -> user still can access to system
    - There is no truly `logout`
 
 So, I solved these problems by store `jid` of JWT in Redis, after `validate` raw token, before `createProfile` I made a simple check to ensure the `jid` exists in `redis`. If no, token is invalid
@@ -131,8 +131,8 @@ internal class AccessVerifierImpl @Inject constructor(private val context: Conte
 - `hasRole` or `hasAnyRoles` will check and return `true`/`false`, while `requireRole` and `requireAnyRoles` will explicitly throw exception if you do not have access.
 
 ### [JpaQueryExecutor](src/main/kotlin/io/github/jonaskahn/assistant/query/JpaQueryExecutor.kt)
-- **Problem**: Sometimes we want to retrieve data from database via native query, but we do not want manually do mapping value to field from result to pojo class. 
-- To solve this problem we have so many ways to get it through, because of using Hibernate. I create JPA Query Executor to parse sql result to object via Jackson
+- **Problem**: Sometimes we want to retrieve data from database via native query, but we do not want manually map field's value from result to pojo class. 
+- To solve this problem we have so many ways. With the usage of Hibernate, I create JPA Query Executor to parse sql result to object via Jackson
 ```kotlin
 class UserRepositoryImpl @Inject constructor(
     private val em: EntityManager
@@ -147,4 +147,4 @@ class UserRepositoryImpl @Inject constructor(
     }
 }
 ```
-> Cause we directly map database field to Pojo object via Jackson, if Pojo class does not have correct field name, please using @JsonAlias (Like database field `full_name`, pojo class `fullName`)
+> So, we directly map database field's value to Pojo object via Jackson, if Pojo class does not have correct field name, please using @JsonAlias (Like database field `full_name`, pojo class `fullName`)
