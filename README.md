@@ -73,7 +73,7 @@ install(
     )
 ```
 1. Using `HeaderClient` to tell Jooby read `Bearer` token from header
-2. By default Jooby use introduced `JwtAuthenticator` from Pac4j, the only problem are:
+2. By default Jooby use introduced `JwtAuthenticator` from Pac4j, the problems are:
    - Token is completed stateless
    - What if user is lock/inactivated/deleted -> token may still valid by the `exp`
    - There is no truly `logout`
