@@ -54,9 +54,9 @@ curl --location 'http://localhost:8080/api/secure/test/admin-role' \
 curl --location --request DELETE 'http://localhost:8080/api/auth/secure/logout' \
 --header 'Authorization: ••••••'
 ```
-# HOW
-## Implement JWT
-### Using [Pac4j](https://jooby.io/modules/pac4j/) Module as Security Layer
+## HOW
+### Implement JWT
+- Using [Pac4j](https://jooby.io/modules/pac4j/) Module as Security Layer
 ```shell
 install(
         Pac4jModule()
@@ -100,7 +100,7 @@ class AdvancedJwtAuthenticator(private val redis: JedisPooled, signatureConfigur
 ```
 3. For now, when you want `logout`, just delete the related `jid` in `redis`.
 
-## [Role Access Verifier](src/main/kotlin/io/github/jonaskahn/services/roles/AccessVerifier.kt)
+### [Role Access Verifier](src/main/kotlin/io/github/jonaskahn/services/roles/AccessVerifier.kt)
 
 ```kotlin
 internal class AccessVerifierImpl @Inject constructor(private val context: Context) : AccessVerifier {
@@ -129,7 +129,7 @@ internal class AccessVerifierImpl @Inject constructor(private val context: Conte
 ```
 - `hasRole` or `hasAnyRoles` will check and return `true`/`false`, while `requireRole` and `requireAnyRoles` will explicitly throw exception if you do not have access.
 
-## [JpaQueryExecutor](src/main/kotlin/io/github/jonaskahn/assistant/query/JpaQueryExecutor.kt)
+### [JpaQueryExecutor](src/main/kotlin/io/github/jonaskahn/assistant/query/JpaQueryExecutor.kt)
 - **Problem**: Something we want to retrieve data from database via native query, but we do not want manually do mapping value to field from result to pojo class. 
 - To solve this problem we have so many ways to get it through, because of using Hibernate. I create JPA Query Executor to parse sql result to object via Jackson
 ```kotlin
