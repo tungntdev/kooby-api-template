@@ -23,5 +23,4 @@ object StatusCode {
     const val INACTIVATED = 2
     const val LOCK = 3
     const val DELETED = 9
-
 }

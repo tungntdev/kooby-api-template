@@ -52,8 +52,8 @@ fun Kooby.setup() {
 
     install(
         Pac4jModule()
-            .client("/api/*") {
-                val client = HeaderClient(
+            .client("*/secure/*") {
+                HeaderClient(
                     "Authorization",
                     "Bearer ",
                     AdvancedJwtAuthenticator(
@@ -61,7 +61,6 @@ fun Kooby.setup() {
                         SecretSignatureConfiguration(it.getString("jwt.salt"))
                     )
                 )
-                client
             }
     )
 

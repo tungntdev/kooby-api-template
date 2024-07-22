@@ -6,7 +6,7 @@ import io.jooby.annotation.GET
 import io.jooby.annotation.Path
 import jakarta.inject.Inject
 
-@Path("/api/test")
+@Path("/api/test/secure")
 class TestRoleController @Inject constructor(private val accessVerifier: AccessVerifier) {
 
     @GET("/admin")

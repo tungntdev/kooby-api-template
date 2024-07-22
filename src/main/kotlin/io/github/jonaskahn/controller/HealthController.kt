@@ -4,11 +4,11 @@ import io.jooby.annotation.GET
 import io.jooby.annotation.Path
 import io.swagger.v3.oas.annotations.Operation
 
-@Path("/")
+@Path("/api")
 class HealthController {
 
     @Operation(summary = "Health Check Endpoints")
-    @GET
+    @GET("/", "/heath")
     fun up(): String {
         return "API is Running!"
     }

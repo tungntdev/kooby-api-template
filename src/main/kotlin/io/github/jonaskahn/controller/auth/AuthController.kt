@@ -2,11 +2,12 @@ package io.github.jonaskahn.controller.auth
 
 import io.github.jonaskahn.services.authen.AuthenticationService
 import io.github.jonaskahn.services.user.UserService
+import io.jooby.annotation.DELETE
 import io.jooby.annotation.POST
 import io.jooby.annotation.Path
 import jakarta.inject.Inject
 
-@Path("/auth")
+@Path("/api/auth")
 class AuthController @Inject constructor(
     private val userService: UserService,
     private val authenticationService: AuthenticationService
@@ -20,5 +21,10 @@ class AuthController @Inject constructor(
     @POST("/register")
     fun register(request: UserRegisterRequest) {
         userService.createUser(request)
+    }
+
+    @DELETE("/secure/logout")
+    fun logout() {
+        authenticationService.logout()
     }
 }
