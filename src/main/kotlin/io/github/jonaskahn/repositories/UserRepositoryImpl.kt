@@ -4,12 +4,24 @@ import io.github.jonaskahn.assistant.query.JpaQueryExecutor
 import io.github.jonaskahn.entities.User
 import io.github.jonaskahn.entities.enums.StatusCode
 import io.github.jonaskahn.services.user.UserInfoDto
+import io.jooby.Context
 import jakarta.inject.Inject
 import jakarta.persistence.EntityManager
 
 class UserRepositoryImpl @Inject constructor(
+    context: Context,
     private val em: EntityManager
-) : UserRepository {
+) : BaseRepository(context), UserRepository {
+    override fun create(user: User) {
+        user.createdBy = getCurrentLoggedUserId()
+        user.updatedBy = getCurrentLoggedUserId()
+        em.persist(user)
+    }
+
+    override fun update(user: User) {
+        user.updatedBy = getCurrentLoggedUserId()
+        em.persist(user)
+    }
 
     override fun findByUsernameOrEmail(username: String): User? {
         val query =
@@ -43,10 +55,6 @@ class UserRepositoryImpl @Inject constructor(
         val query = em.createQuery("select exists ($sql)", Boolean::class.java)
         params.forEach { (k, v) -> query.setParameter(k, v) }
         return query.singleResult
-    }
-
-    override fun save(user: User) {
-        em.persist(user)
     }
 
     override fun findCustomActivatedUserByPreferredUsername(preferredUsername: Long): UserInfoDto? {

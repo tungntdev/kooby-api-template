@@ -29,7 +29,7 @@ internal class UserServiceImpl @Inject constructor(
         newUser.password = passwordEncoder.encode(request.password!!)
         newUser.preferredUsername = TSID.fast().toLong()
         newUser.status = Status.ACTIVATED
-        userRepository.save(newUser)
+        userRepository.create(newUser)
     }
 
     override fun getCurrentUserInfo(): UserInfoDto {

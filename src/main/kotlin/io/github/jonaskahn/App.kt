@@ -36,7 +36,7 @@ import redis.clients.jedis.JedisPooled
 class App : Kooby({
     setting()
     decorate()
-    controller()
+    routes()
 })
 
 fun Kooby.setting() {
@@ -152,7 +152,7 @@ private fun getStatusCodeAndMessage(ex: Throwable, acceptLanguage: String?): Pai
     return Pair(code, res)
 }
 
-fun Kooby.controller() {
+fun Kooby.routes() {
     mount("/api", object : Kooby({
         install(JacksonModule())
         mvc(HealthController::class.java)

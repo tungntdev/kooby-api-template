@@ -6,10 +6,9 @@ import io.github.jonaskahn.entities.converter.StringCollectionConverter
 import io.github.jonaskahn.entities.enums.Status
 import jakarta.persistence.*
 import org.hibernate.annotations.ColumnDefault
-import java.time.Instant
 
 @Entity(name = "users")
-open class User {
+open class User : BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -39,21 +38,6 @@ open class User {
     @Column(name = "roles")
     @Convert(converter = StringCollectionConverter::class)
     open var roles: MutableList<String> = arrayListOf(Roles.USER)
-
-    @ColumnDefault("current_timestamp()")
-    @Column(name = "created_at")
-    open var createdAt: Instant? = null
-
-    @Lob
-    @Column(name = "created_by")
-    open var createdBy: String? = null
-
-    @ColumnDefault("current_timestamp()")
-    @Column(name = "updated_at")
-    open var updatedAt: Instant? = null
-
-    @Column(name = "updated_by")
-    open var updatedBy: Int? = null
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

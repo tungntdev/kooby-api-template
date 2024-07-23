@@ -37,7 +37,7 @@ internal class AuthenticationServiceImpl @Inject constructor(
             throw InvalidCredentialException()
         }
         val profile = CommonProfile()
-        profile.id = users.preferredUsername?.toString()
+        profile.id = users.id?.toString()
         profile.roles = users.roles.toSet()
 
         val jid = TSID.fast().toString()
