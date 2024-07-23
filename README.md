@@ -82,7 +82,7 @@ install(
 
 So, I solved these problems by store `jid` of JWT in Redis, after `validate` raw token, before `createProfile` I made a simple check to ensure the `jid` exists in `redis`. If no, token is invalid
 
-See [AdvancedJwtAuthenticator.kt](src/main/kotlin/io/github/jonaskahn/middlewares/AdvancedJwtAuthenticator.kt)
+See [AdvancedJwtAuthenticator.kt](src/main/kotlin/io/github/jonaskahn/middlewares/jwt/AdvancedJwtAuthenticator.kt)
 ```kotlin
 class AdvancedJwtAuthenticator(private val redis: JedisPooled, signatureConfiguration: SignatureConfiguration) :
     JwtAuthenticator(signatureConfiguration) {
@@ -102,7 +102,7 @@ class AdvancedJwtAuthenticator(private val redis: JedisPooled, signatureConfigur
 ```
 3. For now, when you want `logout`, just delete the related `jid` in `redis`.
 
-### [Role Access Verifier](src/main/kotlin/io/github/jonaskahn/services/roles/AccessVerifier.kt)
+### [Role Access Verifier](src/main/kotlin/io/github/jonaskahn/middlewares/role/AccessVerifier.kt)
 
 ```kotlin
 internal class AccessVerifierImpl @Inject constructor(private val context: Context) : AccessVerifier {

@@ -1,4 +1,4 @@
-package io.github.jonaskahn.middlewares
+package io.github.jonaskahn.middlewares.jwt
 
 import com.nimbusds.jwt.JWT
 import io.github.jonaskahn.constants.Jwt

@@ -1,5 +1,6 @@
 package io.github.jonaskahn.controller.auth
 
+import io.github.jonaskahn.middlewares.validate.BeanValidator
 import io.github.jonaskahn.services.authen.AuthenticationService
 import io.github.jonaskahn.services.user.UserService
 import io.jooby.annotation.DELETE
@@ -10,11 +11,13 @@ import jakarta.inject.Inject
 @Path
 class AuthController @Inject constructor(
     private val userService: UserService,
-    private val authenticationService: AuthenticationService
+    private val authenticationService: AuthenticationService,
+    private val beanValidator: BeanValidator
 ) {
 
     @POST("/auth/generate-token")
     fun generateToken(request: GenerateTokenRequest): String {
+        beanValidator.validate(request)
         return authenticationService.generateToken(request.username!!, request.password!!)
     }
 

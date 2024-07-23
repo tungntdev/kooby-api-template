@@ -9,8 +9,10 @@ import io.github.jonaskahn.controller.user.UserController
 import io.github.jonaskahn.exception.AuthorizationException
 import io.github.jonaskahn.exception.ForbiddenAccessException
 import io.github.jonaskahn.exception.LogicException
+import io.github.jonaskahn.exception.ValidationException
 import io.github.jonaskahn.extensions.JedisModule
-import io.github.jonaskahn.middlewares.AdvancedJwtAuthenticator
+import io.github.jonaskahn.extensions.ValidatorModule
+import io.github.jonaskahn.middlewares.jwt.AdvancedJwtAuthenticator
 import io.jooby.MediaType
 import io.jooby.OpenAPIModule
 import io.jooby.StatusCode
@@ -26,17 +28,18 @@ import io.jooby.kt.Kooby
 import io.jooby.kt.runApp
 import io.jooby.netty.NettyServer
 import io.jooby.pac4j.Pac4jModule
+import jakarta.persistence.NoResultException
 import org.pac4j.http.client.direct.HeaderClient
 import org.pac4j.jwt.config.signature.SecretSignatureConfiguration
 import redis.clients.jedis.JedisPooled
 
 class App : Kooby({
-    setup()
+    setting()
     decorate()
-    routes()
+    controller()
 })
 
-fun Kooby.setup() {
+fun Kooby.setting() {
     install(NettyServer())
     install(OpenAPIModule())
     install(JacksonModule())
@@ -44,6 +47,7 @@ fun Kooby.setup() {
     install(GuiceModule())
 
     install(JedisModule())
+    install(ValidatorModule())
 
     install(HikariModule())
     install(FlywayModule())
@@ -91,49 +95,64 @@ fun Kooby.decorate() {
         }
         val ex = failure as Throwable
         log.error("Error: \n", ex)
-        val (statusCode, message, variables) = getStatusCodeAndMessage(ex)
+        val (statusCode, data) = getStatusCodeAndMessage(ex, acceptLanguage)
         ctx.responseCode = statusCode
-        ctx.render(Response.fail(code = statusCode, message = Language.of(acceptLanguage, message, *variables)))
+        ctx.render(data)
     }
 }
 
-private fun getStatusCodeAndMessage(ex: Throwable): Triple<StatusCode, String, Array<out Any?>> {
-    return when (ex) {
+private fun getStatusCodeAndMessage(ex: Throwable, acceptLanguage: String?): Pair<StatusCode, Response<*>> {
+    val code: StatusCode?
+    val res: Response<*>?
+    when (ex) {
         is LogicException -> {
-            Triple(StatusCode.BAD_REQUEST, ex.message, ex.variables)
+            code = StatusCode.BAD_REQUEST
+            res = Response.fail(code = code, message = Language.of(acceptLanguage, ex.message, ex.variables))
+        }
+
+        is ValidationException -> {
+            code = StatusCode.PRECONDITION_FAILED
+            res = Response.fail(code = code, payload = ex.data)
         }
 
         is NotFoundException -> {
-            Triple(StatusCode.NOT_FOUND, "app.common.exception.notfound", arrayOf())
+            code = StatusCode.NOT_FOUND
+            res = Response.fail(code = code, message = Language.of(acceptLanguage, "app.common.exception.notfound"))
         }
 
         is AuthorizationException, is UnauthorizedException -> {
-            Triple(StatusCode.UNAUTHORIZED, "app.common.exception.AuthorizationException", arrayOf())
+            code = StatusCode.UNAUTHORIZED
+            res = Response.fail(
+                code = code,
+                message = Language.of(acceptLanguage, "app.common.exception.AuthorizationException")
+            )
         }
 
         is ForbiddenAccessException -> {
-            Triple(StatusCode.FORBIDDEN, "app.common.exception.forbidden", arrayOf())
+            code = StatusCode.FORBIDDEN
+            res = Response.fail(code = code, message = Language.of(acceptLanguage, "app.common.exception.forbidden"))
         }
 
-        is IllegalArgumentException -> {
-            Triple(StatusCode.BAD_REQUEST, "app.common.exception-invalid-args", arrayOf())
-        }
-
-        is NoSuchElementException -> {
-            Triple(StatusCode.BAD_REQUEST, "app.common.exception.no-such-element", arrayOf())
+        is NoResultException -> {
+            code = StatusCode.BAD_REQUEST
+            res = Response.fail(code = code, message = Language.of(acceptLanguage, "app.common.exception.no-data"))
         }
 
         is Exception -> {
-            Triple(StatusCode.SERVER_ERROR, "app.common.exception.server-error", arrayOf())
+            code = StatusCode.SERVER_ERROR
+            res = Response.fail(code = code, message = Language.of(acceptLanguage, "app.common.exception.server-error"))
         }
 
         else -> {
-            Triple(StatusCode.SERVER_ERROR, "app.common.exception.unknown-error", arrayOf())
+            code = StatusCode.SERVER_ERROR
+            res =
+                Response.fail(code = code, message = Language.of(acceptLanguage, "app.common.exception.unknown-error"))
         }
     }
+    return Pair(code, res)
 }
 
-fun Kooby.routes() {
+fun Kooby.controller() {
     mount("/api", object : Kooby({
         install(JacksonModule())
         mvc(HealthController::class.java)

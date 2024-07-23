@@ -1,7 +1,7 @@
 package io.github.jonaskahn.controller
 
 import io.github.jonaskahn.constants.Roles
-import io.github.jonaskahn.services.roles.AccessVerifier
+import io.github.jonaskahn.middlewares.role.AccessVerifier
 import io.jooby.annotation.GET
 import io.jooby.annotation.Path
 import jakarta.inject.Inject

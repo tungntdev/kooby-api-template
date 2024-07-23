@@ -50,6 +50,13 @@ class Response<T>(
                 .payload(message ?: "")
                 .build()
         }
+
+        fun fail(payload: Any?, code: StatusCode = StatusCode.BAD_REQUEST): Response<Any> {
+            return builder<Any>()
+                .status(code.value())
+                .payload(payload ?: "")
+                .build()
+        }
     }
 
 

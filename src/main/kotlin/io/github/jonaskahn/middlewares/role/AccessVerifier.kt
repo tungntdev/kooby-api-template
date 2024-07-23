@@ -1,4 +1,4 @@
-package io.github.jonaskahn.services.roles
+package io.github.jonaskahn.middlewares.role
 
 import com.google.inject.ImplementedBy
 
