@@ -1,10 +1,7 @@
 package io.github.jonaskahn.assistant.query
 
-import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.JavaType
-import com.fasterxml.jackson.databind.MapperFeature
-import com.fasterxml.jackson.databind.SerializationFeature
-import com.fasterxml.jackson.databind.json.JsonMapper
+import io.github.jonaskahn.assistant.JsonMapper
 import jakarta.persistence.Query
 import org.hibernate.NonUniqueResultException
 import org.hibernate.query.NativeQuery
@@ -96,13 +93,7 @@ class JpaQueryExecutor<T> private constructor() : QueryExecutor<T> {
     companion object {
 
         fun <T> builder() = Executor<T>()
-
-        private val objectMapper = JsonMapper.builder()
-            .findAndAddModules()
-            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-            .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-            .build()
+        private val objectMapper = JsonMapper.instance
 
         private fun getCollectionType(collectionClass: Class<*>, vararg elementClasses: Class<*>): JavaType {
             return objectMapper.typeFactory

@@ -1,15 +1,13 @@
 package io.github.jonaskahn
 
+import io.github.jonaskahn.assistant.JsonMapper
 import io.github.jonaskahn.assistant.Language
 import io.github.jonaskahn.assistant.Response
 import io.github.jonaskahn.controller.HealthController
 import io.github.jonaskahn.controller.TestRoleController
 import io.github.jonaskahn.controller.auth.AuthController
 import io.github.jonaskahn.controller.user.UserController
-import io.github.jonaskahn.exception.AuthorizationException
-import io.github.jonaskahn.exception.ForbiddenAccessException
-import io.github.jonaskahn.exception.LogicException
-import io.github.jonaskahn.exception.ValidationException
+import io.github.jonaskahn.exception.*
 import io.github.jonaskahn.extensions.JedisModule
 import io.github.jonaskahn.extensions.ValidatorModule
 import io.github.jonaskahn.middlewares.jwt.AdvancedJwtAuthenticator
@@ -120,6 +118,11 @@ private fun getStatusCodeAndMessage(ex: Throwable, acceptLanguage: String?): Pai
             res = Response.fail(code = code, message = Language.of(acceptLanguage, "app.common.exception.notfound"))
         }
 
+        is AuthenticationException -> {
+            code = StatusCode.BAD_REQUEST
+            res = Response.fail(code = code, message = Language.of(acceptLanguage, ex.message))
+        }
+
         is AuthorizationException, is UnauthorizedException -> {
             code = StatusCode.UNAUTHORIZED
             res = Response.fail(
@@ -154,7 +157,7 @@ private fun getStatusCodeAndMessage(ex: Throwable, acceptLanguage: String?): Pai
 
 fun Kooby.routes() {
     mount("/api", object : Kooby({
-        install(JacksonModule())
+        install(JacksonModule(JsonMapper.instance))
         mvc(HealthController::class.java)
         mvc(AuthController::class.java)
         mvc(UserController::class.java)

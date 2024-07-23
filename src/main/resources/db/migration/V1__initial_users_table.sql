@@ -9,9 +9,9 @@ create or replace table users
     status             tinyint   default 1                   not null,
     roles              json                                  null,
     created_at         timestamp default current_timestamp() null,
-    created_by         bigint                                null,
+    created_by         bigint    default 0                   null,
     updated_at         timestamp default current_timestamp() null,
-    updated_by         bigint                                null,
+    updated_by         bigint    default 0                   null,
     constraint `PRIMARY`
         primary key (id),
     constraint users_email_uk

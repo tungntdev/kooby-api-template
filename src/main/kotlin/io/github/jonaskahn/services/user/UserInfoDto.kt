@@ -23,11 +23,11 @@ open class UserInfoDto : Serializable {
     open var createdAt: Instant? = null
 
     @JsonAlias("created_by")
-    open var createdBy: String? = null
+    open var createdBy: Long? = null
 
     @JsonAlias("updated_at")
     open var updatedAt: Instant? = null
 
     @JsonAlias("updated_by")
-    open var updatedBy: Int? = null
+    open var updatedBy: Long? = null
 }

@@ -1,17 +1,15 @@
 package io.github.jonaskahn.entities
 
-import jakarta.persistence.Basic
-import jakarta.persistence.Column
-import jakarta.persistence.PrePersist
-import jakarta.persistence.PreUpdate
+import jakarta.persistence.*
 import org.hibernate.annotations.ColumnDefault
 import java.time.Instant
 
+@MappedSuperclass
 open class BaseEntity {
 
     @ColumnDefault("current_timestamp()")
     @Column(name = "created_at")
-    @Basic
+    @Temporal(TemporalType.TIMESTAMP)
     open var createdAt: Instant? = null
 
     @Column(name = "created_by")
@@ -19,7 +17,7 @@ open class BaseEntity {
 
     @ColumnDefault("current_timestamp()")
     @Column(name = "updated_at")
-    @Basic
+    @Temporal(TemporalType.TIMESTAMP)
     open var updatedAt: Instant? = null
 
     @Column(name = "updated_by")

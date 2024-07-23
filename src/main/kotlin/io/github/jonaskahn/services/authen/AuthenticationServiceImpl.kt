@@ -34,7 +34,7 @@ internal class AuthenticationServiceImpl @Inject constructor(
             throw UserNotFoundException()
         }
         if (!passwordEncoder.matches(password, users.password!!)) {
-            throw InvalidCredentialException()
+            throw UsernamePasswordException("app.users.exception.user-password-not-correct")
         }
         val profile = CommonProfile()
         profile.id = users.id?.toString()

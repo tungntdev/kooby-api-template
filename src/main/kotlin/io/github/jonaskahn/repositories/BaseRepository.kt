@@ -21,7 +21,8 @@ open class BaseRepository<Entity : BaseEntity, ID>(
         em.persist(user)
     }
 
-    private fun getCurrentLoggedUserId(): Long? {
-        return context.getUser<UserProfile>()?.id?.toLong()
+    private fun getCurrentLoggedUserId(): Long {
+        return context.getUser<UserProfile>()?.id?.toLong() ?: 0L
     }
+
 }
