@@ -7,7 +7,6 @@ import jakarta.persistence.PreUpdate
 import org.hibernate.annotations.ColumnDefault
 import java.time.Instant
 
-
 open class BaseEntity {
 
     @ColumnDefault("current_timestamp()")

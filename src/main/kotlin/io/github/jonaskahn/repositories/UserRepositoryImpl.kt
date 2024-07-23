@@ -11,17 +11,7 @@ import jakarta.persistence.EntityManager
 class UserRepositoryImpl @Inject constructor(
     context: Context,
     private val em: EntityManager
-) : BaseRepository(context), UserRepository {
-    override fun create(user: User) {
-        user.createdBy = getCurrentLoggedUserId()
-        user.updatedBy = getCurrentLoggedUserId()
-        em.persist(user)
-    }
-
-    override fun update(user: User) {
-        user.updatedBy = getCurrentLoggedUserId()
-        em.persist(user)
-    }
+) : BaseRepository<User, Long>(context, em), UserRepository {
 
     override fun findByUsernameOrEmail(username: String): User? {
         val query =
