@@ -167,10 +167,7 @@ fun Kooby.routes() {
 }
 
 fun Kooby.web() {
-    assets("/*", "statics")
-    get("/?") {
-        ctx.forward("/")
-    }
+    assets("/*", "static")
 }
 
 fun main(args: Array<String>) {
