@@ -35,6 +35,7 @@ class App : Kooby({
     setting()
     decorate()
     routes()
+    web()
 })
 
 fun Kooby.setting() {
@@ -163,6 +164,13 @@ fun Kooby.routes() {
         mvc(UserController::class.java)
         mvc(TestRoleController::class.java)
     }) {})
+}
+
+fun Kooby.web() {
+    assets("/*", "statics")
+    get("/?") {
+        ctx.forward("/")
+    }
 }
 
 fun main(args: Array<String>) {
