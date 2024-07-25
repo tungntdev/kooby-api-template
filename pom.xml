@@ -14,7 +14,7 @@
     <properties>
         <application.class>io.github.jonaskahn.AppKt</application.class>
 
-        <jooby.version>3.2.5</jooby.version>
+        <jooby.version>3.2.6</jooby.version>
         <kotlin.version>2.0.0</kotlin.version>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
         <maven.compiler.source>21</maven.compiler.source>
@@ -199,7 +199,8 @@
     </dependencies>
 
     <build>
-        <sourceDirectory>src/main/kotlin</sourceDirectory>
+        <sourceDirectory>${project.basedir}${file.separator}src${file.separator}main${file.separator}kotlin</sourceDirectory>
+        <testSourceDirectory>${project.basedir}${file.separator}src${file.separator}test${file.separator}kotlin</testSourceDirectory>
         <resources>
             <resource>
                 <directory>conf</directory>

@@ -157,14 +157,16 @@ private fun getStatusCodeAndMessage(ex: Throwable, acceptLanguage: String?): Pai
 }
 
 fun Kooby.routes() {
-    mount("/api", object : Kooby({
-        install(JacksonModule(JsonMapper.instance))
-        mvc(HealthController::class.java)
-        mvc(AuthController::class.java)
-        mvc(UserController::class.java)
-        mvc(TestRoleController::class.java)
-    }) {})
+    mount("/api", RouteDefinition())
 }
+
+private class RouteDefinition : Kooby({
+    install(JacksonModule(JsonMapper.instance))
+    mvc(HealthController::class.java)
+    mvc(AuthController::class.java)
+    mvc(UserController::class.java)
+    mvc(TestRoleController::class.java)
+})
 
 fun Kooby.web() {
     assets("/*", "static")
