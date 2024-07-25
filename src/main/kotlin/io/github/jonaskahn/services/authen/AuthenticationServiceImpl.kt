@@ -25,7 +25,8 @@ internal class AuthenticationServiceImpl @Inject constructor(
     private val context: Context,
     private val jedis: JedisPooled,
 ) : AuthenticationService {
-    override fun generateToken(username: String, password: String): String {
+
+    override fun generateToken(username: String, password: String, increaseExpired: Boolean): String {
         val users = userRepository.findByUsernameOrEmail(username) ?: throw UserNotFoundException()
         if (users.status == Status.LOCK || users.status == Status.INACTIVATED) {
             throw UserLockedException()
@@ -44,8 +45,9 @@ internal class AuthenticationServiceImpl @Inject constructor(
         profile.addAttribute(Jwt.Attribute.JTI, jid)
         profile.addAttribute(Jwt.Attribute.UID, users.preferredUsername.toString())
 
-        val expirationTimeInSeconds = environment.config.getString("jwt.expiration")?.toLong() ?: 3600L
-        val expirationDate = Date(Date().time + expirationTimeInSeconds * 1000)
+        val initialExpirationTime = environment.config.getString("jwt.expiration")?.toLong() ?: 3600L
+        val expirationTimes = if(increaseExpired) (initialExpirationTime + 60 * 60 * 24 * 15) else initialExpirationTime
+        val expirationDate = Date(Date().time + expirationTimes * 1000)
         profile.addAttribute(Jwt.Attribute.EXP, expirationDate)
 
         profile.addAttribute(CommonProfileDefinition.DISPLAY_NAME, users.fullName)
@@ -56,7 +58,7 @@ internal class AuthenticationServiceImpl @Inject constructor(
             RedisNameSpace.getUserTokenExpirationKey(
                 users.preferredUsername!!.toString(),
                 jid
-            ), expirationTimeInSeconds, expirationDate.toString()
+            ), expirationTimes, expirationDate.toString()
         )
         return jwtGenerator.generate(profile)
     }

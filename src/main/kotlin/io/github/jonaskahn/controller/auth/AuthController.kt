@@ -18,7 +18,7 @@ class AuthController @Inject constructor(
     @POST("/auth/generate-token")
     fun generateToken(request: GenerateTokenRequest): String {
         beanValidator.validate(request)
-        return authenticationService.generateToken(request.username!!, request.password!!)
+        return authenticationService.generateToken(request.username!!, request.password!!, request.rememberMe)
     }
 
     @POST("/auth/register")
