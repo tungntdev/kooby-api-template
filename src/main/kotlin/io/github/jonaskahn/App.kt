@@ -41,7 +41,7 @@ class App : Kooby({
 fun Kooby.setting() {
     install(NettyServer())
     install(OpenAPIModule())
-    install(JacksonModule())
+    install(JacksonModule(JsonMapper.INSTANCE))
 
     install(GuiceModule())
 
@@ -161,7 +161,7 @@ fun Kooby.routes() {
 }
 
 private class RouteDefinition : Kooby({
-    install(JacksonModule(JsonMapper.instance))
+    install(JacksonModule(JsonMapper.INSTANCE))
     mvc(HealthController::class.java)
     mvc(AuthController::class.java)
     mvc(UserController::class.java)
