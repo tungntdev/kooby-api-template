@@ -295,6 +295,7 @@
                 <version>${jooby.version}</version>
                 <executions>
                     <execution>
+                        <phase>compile</phase>
                         <goals>
                             <goal>openapi</goal>
                         </goals>
