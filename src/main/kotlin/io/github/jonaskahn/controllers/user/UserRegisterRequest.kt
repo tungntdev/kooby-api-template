@@ -1,4 +1,4 @@
-package io.github.jonaskahn.controllers.auth
+package io.github.jonaskahn.controllers.user
 
 import com.fasterxml.jackson.annotation.JsonAlias
 

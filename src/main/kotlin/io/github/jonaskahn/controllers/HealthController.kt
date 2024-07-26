@@ -10,6 +10,6 @@ class HealthController {
     @Operation(summary = "Health Check Endpoints")
     @GET
     fun up(): String {
-        return "API is Running!"
+        return "API is up!!!"
     }
 }
