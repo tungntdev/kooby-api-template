@@ -3,10 +3,10 @@ package io.github.jonaskahn
 import io.github.jonaskahn.assistant.JacksonMapper
 import io.github.jonaskahn.assistant.Language
 import io.github.jonaskahn.assistant.Response
-import io.github.jonaskahn.controller.HealthController
-import io.github.jonaskahn.controller.TestRoleController
-import io.github.jonaskahn.controller.auth.AuthController
-import io.github.jonaskahn.controller.user.UserController
+import io.github.jonaskahn.controllers.HealthController
+import io.github.jonaskahn.controllers.TestRoleController
+import io.github.jonaskahn.controllers.auth.AuthController
+import io.github.jonaskahn.controllers.user.UserController
 import io.github.jonaskahn.exception.*
 import io.github.jonaskahn.extensions.JedisModule
 import io.github.jonaskahn.extensions.ValidatorModule

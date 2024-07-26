@@ -1,4 +1,4 @@
-package io.github.jonaskahn.controller.user
+package io.github.jonaskahn.controllers.user
 
 import io.github.jonaskahn.services.user.UserInfoDto
 import io.github.jonaskahn.services.user.UserService

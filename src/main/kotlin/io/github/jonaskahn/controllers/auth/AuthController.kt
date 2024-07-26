@@ -1,4 +1,4 @@
-package io.github.jonaskahn.controller.auth
+package io.github.jonaskahn.controllers.auth
 
 import io.github.jonaskahn.middlewares.validate.BeanValidator
 import io.github.jonaskahn.services.authen.AuthenticationService

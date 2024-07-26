@@ -1,4 +1,4 @@
-package io.github.jonaskahn.controller
+package io.github.jonaskahn.controllers
 
 import io.jooby.annotation.GET
 import io.jooby.annotation.Path

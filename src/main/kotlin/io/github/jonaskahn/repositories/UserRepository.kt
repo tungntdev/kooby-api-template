@@ -1,15 +1,12 @@
 package io.github.jonaskahn.repositories
 
 import com.google.inject.ImplementedBy
+import io.github.jonaskahn.entities.BaseEntity
 import io.github.jonaskahn.entities.User
 import io.github.jonaskahn.services.user.UserInfoDto
 
 @ImplementedBy(UserRepositoryImpl::class)
-interface UserRepository {
-
-    fun create(user: User)
-
-    fun update(user: User)
+interface UserRepository: BaseRepository<User, Long> {
 
     fun findByUsernameOrEmail(username: String): User?
 

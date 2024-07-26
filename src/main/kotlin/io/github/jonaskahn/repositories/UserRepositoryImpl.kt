@@ -2,28 +2,28 @@ package io.github.jonaskahn.repositories
 
 import io.github.jonaskahn.assistant.query.JpaQueryExecutor
 import io.github.jonaskahn.entities.User
-import io.github.jonaskahn.entities.enums.StatusCode
+import io.github.jonaskahn.entities.enums.Status
 import io.github.jonaskahn.services.user.UserInfoDto
 import io.jooby.Context
 import jakarta.inject.Inject
 import jakarta.persistence.EntityManager
 
 class UserRepositoryImpl @Inject constructor(
-    context: Context,
-    private val em: EntityManager
-) : BaseRepository<User, Long>(context, em), UserRepository {
+    private val entityManager: EntityManager,
+    context: Context
+) : BaseRepositoryImpl<User, Long>(entityManager, User::class.java, context), UserRepository {
 
     override fun findByUsernameOrEmail(username: String): User? {
         val query =
-            em.createQuery("select u from users u where username = :username or email = :username", User::class.java)
+            entityManager.createQuery("select u from users u where username = :username or email = :username", User::class.java)
         query.setParameter("username", username)
         return query.singleResult
     }
 
     override fun findActivatedUserByPreferredUsername(preferredUsername: Long): User? {
         val query =
-            em.createQuery(
-                "select u from users u where preferredUsername = :preferredUsername and status = ${StatusCode.ACTIVATED}",
+            entityManager.createQuery(
+                "select u from users u where preferredUsername = :preferredUsername and status = ${Status.Code.ACTIVATED}",
                 User::class.java
             )
         query.setParameter("preferredUsername", preferredUsername)
@@ -42,14 +42,14 @@ class UserRepositoryImpl @Inject constructor(
             sql.append(" AND u.email = :email")
             params["email"] = email
         }
-        val query = em.createQuery("select exists ($sql)", Boolean::class.java)
+        val query = entityManager.createQuery("select exists ($sql)", Boolean::class.java)
         params.forEach { (k, v) -> query.setParameter(k, v) }
         return query.singleResult
     }
 
     override fun findCustomActivatedUserByPreferredUsername(preferredUsername: Long): UserInfoDto? {
         val query =
-            em.createNativeQuery("select * from users where preferred_username = :preferredUsername and status = ${StatusCode.ACTIVATED}")
+            entityManager.createNativeQuery("select * from users where preferred_username = :preferredUsername and status = ${Status.Code.ACTIVATED}")
         return JpaQueryExecutor.builder<UserInfoDto>()
             .with(query, mutableMapOf("preferredUsername" to preferredUsername))
             .map(UserInfoDto::class.java)

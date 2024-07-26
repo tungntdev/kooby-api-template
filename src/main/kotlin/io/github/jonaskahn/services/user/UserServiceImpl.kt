@@ -1,7 +1,7 @@
 package io.github.jonaskahn.services.user
 
 import io.github.jonaskahn.constants.Jwt
-import io.github.jonaskahn.controller.auth.UserRegisterRequest
+import io.github.jonaskahn.controllers.auth.UserRegisterRequest
 import io.github.jonaskahn.entities.User
 import io.github.jonaskahn.entities.enums.Status
 import io.github.jonaskahn.exception.ShouldNeverOccurException
