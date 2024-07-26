@@ -1,6 +1,8 @@
 package io.github.jonaskahn.services.user
 
 import com.fasterxml.jackson.annotation.JsonAlias
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import io.github.jonaskahn.assistant.jackson.StringToStringCollectionDeserializer
 import io.github.jonaskahn.entities.enums.Status
 import java.io.Serializable
 import java.time.Instant
@@ -18,6 +20,9 @@ open class UserDto : Serializable {
             this.statusName = value?.description
         }
     open var statusName: String? = null
+
+    @JsonDeserialize(using = StringToStringCollectionDeserializer::class)
+    open var roles: List<String> = listOf()
 
     @JsonAlias("created_at")
     open var createdAt: Instant? = null
