@@ -11,9 +11,7 @@ object DataUtils {
     private val log = LoggerFactory.getLogger(DataUtils::class.java)
 
     fun convertJsonStringCollection(data: String?): List<String>? {
-        if (StringUtils.isEmpty(data)) {
-            return listOf()
-        }
+        if (StringUtils.isEmpty(data)) return listOf()
         return try {
             JacksonMapper.INSTANCE.readValue(data, object : TypeReference<List<String>>() {})
         } catch (e: Exception) {
@@ -23,9 +21,7 @@ object DataUtils {
     }
 
     fun <T> convertJsonToString(data: T?): String? {
-        if (ObjectUtils.isEmpty(data)) {
-            return null
-        }
+        if (ObjectUtils.isEmpty(data)) return null
         return try {
             JacksonMapper.INSTANCE.writeValueAsString(data)
         } catch (e: Exception) {
