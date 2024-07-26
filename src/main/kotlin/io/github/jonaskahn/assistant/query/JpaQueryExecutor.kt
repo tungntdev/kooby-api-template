@@ -1,7 +1,7 @@
 package io.github.jonaskahn.assistant.query
 
 import com.fasterxml.jackson.databind.JavaType
-import io.github.jonaskahn.assistant.JsonMapper
+import io.github.jonaskahn.assistant.JacksonMapper
 import jakarta.persistence.Query
 import org.hibernate.NonUniqueResultException
 import org.hibernate.query.NativeQuery
@@ -93,7 +93,7 @@ class JpaQueryExecutor<T> private constructor() : QueryExecutor<T> {
     companion object {
 
         fun <T> builder() = Executor<T>()
-        private val objectMapper = JsonMapper.INSTANCE
+        private val objectMapper = JacksonMapper.INSTANCE
 
         private fun getCollectionType(collectionClass: Class<*>, vararg elementClasses: Class<*>): JavaType {
             return objectMapper.typeFactory

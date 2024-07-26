@@ -1,6 +1,6 @@
 package io.github.jonaskahn
 
-import io.github.jonaskahn.assistant.JsonMapper
+import io.github.jonaskahn.assistant.JacksonMapper
 import io.github.jonaskahn.assistant.Language
 import io.github.jonaskahn.assistant.Response
 import io.github.jonaskahn.controller.HealthController
@@ -42,7 +42,7 @@ class App : Kooby({
 fun Kooby.setting() {
     install(NettyServer())
     install(OpenAPIModule())
-    install(JacksonModule(JsonMapper.INSTANCE))
+    install(JacksonModule(JacksonMapper.INSTANCE))
 
     install(GuiceModule())
 
@@ -172,7 +172,7 @@ fun Kooby.routes() {
 }
 
 private class RouteDefinition : Kooby({
-    install(JacksonModule(JsonMapper.INSTANCE))
+    install(JacksonModule(JacksonMapper.INSTANCE))
     mvc(HealthController::class.java)
     mvc(AuthController::class.java)
     mvc(UserController::class.java)

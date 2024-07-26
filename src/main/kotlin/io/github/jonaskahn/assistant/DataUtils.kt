@@ -15,7 +15,7 @@ object DataUtils {
             return listOf()
         }
         return try {
-            JsonMapper.INSTANCE.readValue(data, object : TypeReference<List<String>>() {})
+            JacksonMapper.INSTANCE.readValue(data, object : TypeReference<List<String>>() {})
         } catch (e: Exception) {
             log.warn("Cannot convert json string to list", e)
             listOf()
@@ -27,7 +27,7 @@ object DataUtils {
             return null
         }
         return try {
-            JsonMapper.INSTANCE.writeValueAsString(data)
+            JacksonMapper.INSTANCE.writeValueAsString(data)
         } catch (e: Exception) {
             log.warn("Cannot convert data to json string", e)
             StringUtils.EMPTY

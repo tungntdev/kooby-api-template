@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.databind.json.JsonMapper
 
-object JsonMapper {
+object JacksonMapper {
     val INSTANCE: JsonMapper = JsonMapper.builder()
         .findAndAddModules()
         .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
