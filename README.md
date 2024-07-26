@@ -5,7 +5,7 @@
 ## Looking for Java version
 - [Checkout](https://github.com/jonaskahn/jooby-api-template)
 
-## Which's included?
+## What's included?
 - [x] Support Default JWT
 - [x] Support Role Access Layer
 - [x] Hibernate, Flyway support by default
