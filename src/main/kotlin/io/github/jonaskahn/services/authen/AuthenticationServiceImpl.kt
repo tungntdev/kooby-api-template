@@ -46,7 +46,8 @@ internal class AuthenticationServiceImpl @Inject constructor(
         profile.addAttribute(Jwt.Attribute.UID, users.preferredUsername.toString())
 
         val initialExpirationTime = environment.config.getString("jwt.expiration")?.toLong() ?: 3600L
-        val expirationTimes = if(increaseExpired) (initialExpirationTime + 60 * 60 * 24 * 15) else initialExpirationTime
+        val expirationTimes =
+            if (increaseExpired) (initialExpirationTime + 60 * 60 * 24 * 15) else initialExpirationTime
         val expirationDate = Date(Date().time + expirationTimes * 1000)
         profile.addAttribute(Jwt.Attribute.EXP, expirationDate)
 

@@ -22,6 +22,7 @@ import io.jooby.hibernate.HibernateModule
 import io.jooby.hibernate.TransactionalRequest
 import io.jooby.hikari.HikariModule
 import io.jooby.jackson.JacksonModule
+import io.jooby.kt.AfterContext
 import io.jooby.kt.Kooby
 import io.jooby.kt.runApp
 import io.jooby.netty.NettyServer
@@ -51,8 +52,6 @@ fun Kooby.setting() {
     install(HikariModule())
     install(FlywayModule())
     install(HibernateModule().scan("io.github.jonaskahn.entities"))
-    use(TransactionalRequest().enabledByDefault(true))
-
 
     install(
         Pac4jModule()
@@ -68,7 +67,9 @@ fun Kooby.setting() {
             }
     )
 
+    use(TransactionalRequest().enabledByDefault(true))
     setContextAsService(true)
+
 }
 
 fun Kooby.decorate() {
@@ -76,29 +77,39 @@ fun Kooby.decorate() {
         val acceptLanguage: String? = ctx.header("Accept-Language").valueOrNull()
         ctx.setDefaultResponseType(MediaType.json)
         if (failure == null) {
-            ctx.responseCode = StatusCode.OK
-            when (result) {
-                is Response<*> -> {
-                    ctx.render(result as Response<*>)
-                }
-
-                is StatusCode -> {
-                    ctx.render(Response.ok(Language.of(acceptLanguage, "app.common.message.success")))
-                }
-
-                else -> {
-                    ctx.render(Response.ok(result))
-                }
-            }
-            return@after
+            handleSuccess(acceptLanguage)
+        } else {
+            log.error("Something went wrong, detail", failure as Throwable)
+            handleFailure(acceptLanguage)
         }
-        val ex = failure as Throwable
-        log.error("Error: \n", ex)
-        val (statusCode, data) = getStatusCodeAndMessage(ex, acceptLanguage)
-        ctx.responseCode = statusCode
-        ctx.render(data)
     }
 }
+
+private fun AfterContext.handleSuccess(acceptLanguage: String?) {
+    ctx.responseCode = StatusCode.OK
+    when (result) {
+        is Response<*> -> {
+            ctx.render(result as Response<*>)
+        }
+
+        is StatusCode -> {
+            ctx.render(Response.ok(Language.of(acceptLanguage, "app.common.message.success")))
+        }
+
+        else -> {
+            ctx.render(Response.ok(result))
+        }
+    }
+    return
+}
+
+private fun AfterContext.handleFailure(acceptLanguage: String?) {
+    val ex = failure as Throwable
+    val (statusCode, data) = getStatusCodeAndMessage(ex, acceptLanguage)
+    ctx.responseCode = statusCode
+    ctx.render(data)
+}
+
 
 private fun getStatusCodeAndMessage(ex: Throwable, acceptLanguage: String?): Pair<StatusCode, Response<*>> {
     val code: StatusCode?
