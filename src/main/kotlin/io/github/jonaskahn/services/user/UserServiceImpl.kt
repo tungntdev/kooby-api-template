@@ -32,7 +32,7 @@ internal class UserServiceImpl @Inject constructor(
         userRepository.create(newUser)
     }
 
-    override fun getCurrentUserInfo(): UserInfoDto {
+    override fun getCurrentUserInfo(): UserDto {
         val userProfile = context.getUser<BasicUserProfile>()
         val preferredUsername =
             userProfile?.getAttribute(Jwt.Attribute.UID)?.toString() ?: throw ShouldNeverOccurException()
@@ -41,7 +41,7 @@ internal class UserServiceImpl @Inject constructor(
         return UserToInfoDtoMapper.INSTANCE.userToUserInfoDto(user)
     }
 
-    override fun getCurrentUserInfoWithExecutor(): UserInfoDto {
+    override fun getCurrentUserInfoWithExecutor(): UserDto {
         val userProfile = context.getUser<BasicUserProfile>()
         val preferredUsername =
             userProfile?.getAttribute(Jwt.Attribute.UID)?.toString() ?: throw ShouldNeverOccurException()

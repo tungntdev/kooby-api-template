@@ -7,7 +7,7 @@ import io.github.jonaskahn.controllers.auth.UserRegisterRequest
 interface UserService {
     fun createUser(request: UserRegisterRequest)
 
-    fun getCurrentUserInfo(): UserInfoDto
+    fun getCurrentUserInfo(): UserDto
 
-    fun getCurrentUserInfoWithExecutor(): UserInfoDto
+    fun getCurrentUserInfoWithExecutor(): UserDto
 }

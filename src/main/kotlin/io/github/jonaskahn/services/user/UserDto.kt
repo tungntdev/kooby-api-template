@@ -5,7 +5,7 @@ import io.github.jonaskahn.entities.enums.Status
 import java.io.Serializable
 import java.time.Instant
 
-open class UserInfoDto : Serializable {
+open class UserDto : Serializable {
     open var id: Long? = null
     open var username: String? = null
     open var email: String? = null

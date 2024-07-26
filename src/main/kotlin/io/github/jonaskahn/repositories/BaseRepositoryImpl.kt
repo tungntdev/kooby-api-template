@@ -9,7 +9,7 @@ open class BaseRepositoryImpl<Entity : BaseEntity, ID>(
     private val entityManager: EntityManager,
     private val entity: Class<Entity>,
     private val context: Context
-): BaseRepository<Entity, ID> {
+) : BaseRepository<Entity, ID> {
 
     override fun create(e: Entity) {
         e.createdBy = getCurrentLoggedUserId()
@@ -31,7 +31,7 @@ open class BaseRepositoryImpl<Entity : BaseEntity, ID>(
     }
 
     override fun deleteById(id: ID) {
-       findById(id)?.let { entityManager.remove(it) }
+        findById(id)?.let { entityManager.remove(it) }
     }
 
     override fun findById(id: ID): Entity? {

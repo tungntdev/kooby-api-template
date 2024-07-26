@@ -3,21 +3,31 @@ package io.github.jonaskahn.repositories
 import io.github.jonaskahn.assistant.query.JpaQueryExecutor
 import io.github.jonaskahn.entities.User
 import io.github.jonaskahn.entities.enums.Status
-import io.github.jonaskahn.services.user.UserInfoDto
+import io.github.jonaskahn.services.user.UserDto
 import io.jooby.Context
 import jakarta.inject.Inject
 import jakarta.persistence.EntityManager
+import org.slf4j.LoggerFactory
 
 class UserRepositoryImpl @Inject constructor(
     private val entityManager: EntityManager,
     context: Context
 ) : BaseRepositoryImpl<User, Long>(entityManager, User::class.java, context), UserRepository {
 
-    override fun findByUsernameOrEmail(username: String): User? {
+    override fun findByUsernameOrEmail(username: String, email: String): User? {
         val query =
-            entityManager.createQuery("select u from users u where username = :username or email = :username", User::class.java)
+            entityManager.createQuery(
+                "select u from users u where username = :username or email = :email",
+                User::class.java
+            )
         query.setParameter("username", username)
-        return query.singleResult
+        query.setParameter("email", email)
+        return try {
+            query.singleResult
+        } catch (e: Exception) {
+            log.warn("Could not find the users with given username or email", e)
+            null
+        }
     }
 
     override fun findActivatedUserByPreferredUsername(preferredUsername: Long): User? {
@@ -27,7 +37,12 @@ class UserRepositoryImpl @Inject constructor(
                 User::class.java
             )
         query.setParameter("preferredUsername", preferredUsername)
-        return query.singleResult
+        return try {
+            query.singleResult
+        } catch (e: Exception) {
+            log.warn("Could not find the users with given preferredUsername", e)
+            null
+        }
     }
 
     override fun existsByUsernameOrEmail(username: String?, email: String?): Boolean {
@@ -47,12 +62,17 @@ class UserRepositoryImpl @Inject constructor(
         return query.singleResult
     }
 
-    override fun findCustomActivatedUserByPreferredUsername(preferredUsername: Long): UserInfoDto? {
+    override fun findCustomActivatedUserByPreferredUsername(preferredUsername: Long): UserDto? {
         val query =
             entityManager.createNativeQuery("select * from users where preferred_username = :preferredUsername and status = ${Status.Code.ACTIVATED}")
-        return JpaQueryExecutor.builder<UserInfoDto>()
+        return JpaQueryExecutor.builder<UserDto>()
             .with(query, mutableMapOf("preferredUsername" to preferredUsername))
-            .map(UserInfoDto::class.java)
+            .map(UserDto::class.java)
             .getSingleResult()
+    }
+
+
+    companion object {
+        private val log = LoggerFactory.getLogger(UserRepositoryImpl::class.java)
     }
 }

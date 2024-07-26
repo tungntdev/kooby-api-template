@@ -27,7 +27,7 @@ internal class AuthenticationServiceImpl @Inject constructor(
 ) : AuthenticationService {
 
     override fun generateToken(username: String, password: String, increaseExpired: Boolean): String {
-        val users = userRepository.findByUsernameOrEmail(username) ?: throw UserNotFoundException()
+        val users = userRepository.findByUsernameOrEmail(username, username) ?: throw UserNotFoundException()
         if (users.status == Status.LOCK || users.status == Status.INACTIVATED) {
             throw UserLockedException()
         }
