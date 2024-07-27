@@ -37,7 +37,7 @@ open class User : BaseEntity() {
     @Lob
     @Column(name = "roles")
     @Convert(converter = StringCollectionConverter::class)
-    open var roles: MutableList<String> = arrayListOf(Roles.USER)
+    open var roles: MutableList<String> = arrayListOf(Roles.STAFF)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
