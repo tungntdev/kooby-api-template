@@ -1,4 +1,4 @@
-package io.github.jonaskahn.controller
+package io.github.jonaskahn.controllers
 
 import io.jooby.annotation.GET
 import io.jooby.annotation.Path
@@ -10,6 +10,6 @@ class HealthController {
     @Operation(summary = "Health Check Endpoints")
     @GET
     fun up(): String {
-        return "API is Running!"
+        return "API is up!!!"
     }
 }

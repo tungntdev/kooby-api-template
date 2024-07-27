@@ -1,4 +1,4 @@
-package io.github.jonaskahn.controller
+package io.github.jonaskahn.controllers
 
 import io.github.jonaskahn.constants.Roles
 import io.github.jonaskahn.middlewares.role.AccessVerifier

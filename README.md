@@ -2,7 +2,10 @@
 - Fast, light, easy to learn
 - I've been using Spring for almost my wokring time with Java/Kotlin. For large scale enterprise projects, Spring Stacks are undoubtedly the way to go, but for minimal projects, Kooby is a good choice.
 
-## Which's included?
+## Looking for Java version
+- [Checkout](https://github.com/jonaskahn/jooby-api-template)
+
+## What's included?
 - [x] Support Default JWT
 - [x] Support Role Access Layer
 - [x] Hibernate, Flyway support by default
@@ -59,7 +62,7 @@ curl --location --request DELETE 'http://localhost:8080/api/auth/secure/logout' 
 ## HOW
 ### Implement JWT
 - Using [Pac4j](https://jooby.io/modules/pac4j/) Module as Security Layer
-```shell
+```kotlin
 install(
         Pac4jModule()
             .client("/api/secure/*") {
