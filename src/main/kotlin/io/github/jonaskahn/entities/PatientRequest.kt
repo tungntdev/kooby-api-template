@@ -1,5 +1,9 @@
 package io.github.jonaskahn.entities
 
+import io.github.jonaskahn.entities.converter.StateConverter
+import io.github.jonaskahn.entities.converter.StatusConverter
+import io.github.jonaskahn.entities.enums.State
+import io.github.jonaskahn.entities.enums.Status
 import jakarta.persistence.*
 import jakarta.validation.constraints.Size
 import org.hibernate.annotations.ColumnDefault
@@ -8,7 +12,7 @@ import java.time.LocalDate
 
 @Entity
 @Table(name = "patient_request")
-open class PatientRequest {
+open class PatientRequest: BaseEntity() {
     @Id
     @Column(name = "id", nullable = false)
     open var id: Int? = null
@@ -66,20 +70,10 @@ open class PatientRequest {
     open var signDate: Instant? = null
 
     @Column(name = "state")
-    open var state: Int? = null
+    @Convert(converter = StateConverter::class)
+    open var state: State? = null
 
     @Column(name = "status")
-    open var status: Int? = null
-
-    @Column(name = "created_at")
-    open var createdAt: Instant? = null
-
-    @Column(name = "created_by")
-    open var createdBy: Int? = null
-
-    @Column(name = "updated_at")
-    open var updatedAt: Instant? = null
-
-    @Column(name = "updated_by")
-    open var updatedBy: Int? = null
+    @Convert(converter = StatusConverter::class)
+    open var status: Status? = null
 }
