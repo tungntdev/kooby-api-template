@@ -12,7 +12,7 @@ import java.time.LocalDate
 
 @Entity
 @Table(name = "patient_request")
-open class PatientRequest: BaseEntity() {
+open class PatientRequest : BaseEntity() {
     @Id
     @Column(name = "id", nullable = false)
     open var id: Int? = null
@@ -69,11 +69,14 @@ open class PatientRequest: BaseEntity() {
     @Column(name = "sign_date")
     open var signDate: Instant? = null
 
+    @ColumnDefault("0")
     @Column(name = "state")
     @Convert(converter = StateConverter::class)
-    open var state: State? = null
+    open var state: State? = State.PENDING
 
+    @ColumnDefault("1")
     @Column(name = "status")
     @Convert(converter = StatusConverter::class)
-    open var status: Status? = null
+    open var status: Status? = Status.ACTIVATED
+
 }

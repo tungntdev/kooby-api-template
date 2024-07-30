@@ -1,15 +1,14 @@
 package io.github.jonaskahn.entities
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
-import jakarta.persistence.Table
+import io.github.jonaskahn.entities.converter.StatusConverter
+import io.github.jonaskahn.entities.enums.Status
+import jakarta.persistence.*
 import jakarta.validation.constraints.Size
 import org.hibernate.annotations.ColumnDefault
 
 @Entity
 @Table(name = "province")
-open class Province {
+open class Province{
     @Id
     @Column(name = "id", nullable = false)
     open var id: Int? = null
@@ -20,5 +19,10 @@ open class Province {
 
     @ColumnDefault("1")
     @Column(name = "status")
-    open var status: Byte? = null
+    @Convert(converter = StatusConverter::class)
+    open var status: Status = Status.ACTIVATED
+
+    @Column(name = "status_name")
+    open var statusName: String = status.description
+        get() = status.description
 }

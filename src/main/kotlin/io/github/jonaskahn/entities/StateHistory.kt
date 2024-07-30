@@ -7,6 +7,7 @@ import java.time.Instant
 @Table(name = "state_history")
 open class StateHistory {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     open var id: Int? = null
 

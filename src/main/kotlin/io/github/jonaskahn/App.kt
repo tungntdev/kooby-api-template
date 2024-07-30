@@ -4,6 +4,7 @@ import io.github.jonaskahn.assistant.JacksonMapper
 import io.github.jonaskahn.assistant.Language
 import io.github.jonaskahn.assistant.Response
 import io.github.jonaskahn.controllers.auth.AuthController
+import io.github.jonaskahn.controllers.common.AddressController
 import io.github.jonaskahn.controllers.user.UserController
 import io.github.jonaskahn.exception.*
 import io.github.jonaskahn.extensions.JedisModule
@@ -173,6 +174,7 @@ private class RouteDefinition : Kooby({
     install(JacksonModule(JacksonMapper.INSTANCE))
     mvc(AuthController::class.java)
     mvc(UserController::class.java)
+    mvc(AddressController::class.java)
 })
 
 fun Kooby.web() {
