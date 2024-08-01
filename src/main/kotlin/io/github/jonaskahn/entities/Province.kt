@@ -22,7 +22,4 @@ open class Province{
     @Convert(converter = StatusConverter::class)
     open var status: Status = Status.ACTIVATED
 
-    @Column(name = "status_name")
-    open var statusName: String = status.description
-        get() = status.description
 }

@@ -6,20 +6,20 @@ import io.jooby.Context
 import jakarta.persistence.EntityManager
 import org.pac4j.core.profile.UserProfile
 
-open class BaseRepositoryImpl<Entity : BaseEntity, ID>(
+open class BaseRepositoryImpl<Entity , ID>(
     private val entityManager: EntityManager,
     private val entity: Class<Entity>,
     private val context: Context
 ) : BaseRepository<Entity, ID> {
 
     override fun create(e: Entity) {
-        e.createdBy = getCurrentLoggedUserId()
-        e.updatedBy = getCurrentLoggedUserId()
+//        e.createdBy = getCurrentLoggedUserId()
+//        e.updatedBy = getCurrentLoggedUserId()
         entityManager.persist(e)
     }
 
     override fun update(e: Entity) {
-        e.updatedBy = getCurrentLoggedUserId()
+//        e.updatedBy = getCurrentLoggedUserId()
         entityManager.persist(e)
     }
 
@@ -39,7 +39,7 @@ open class BaseRepositoryImpl<Entity : BaseEntity, ID>(
         return entityManager.find(entity, id)
     }
 
-    override fun findAll(): MutableList<Entity>? {
+    override fun findAll(): List<Entity> {
         val criteriaBuilder = entityManager.criteriaBuilder
         val criteriaQuery = criteriaBuilder.createQuery(entity)
         val root = criteriaQuery.from(entity)

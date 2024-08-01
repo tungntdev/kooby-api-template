@@ -10,6 +10,6 @@ class AddressServiceImpl @Inject constructor(
     private val context: Context
 ): AddressService {
     override fun getAllProvinces(): List<Province> {
-        return provinceRepository.findAllProvince()
+        return provinceRepository.findAll()
     }
 }
