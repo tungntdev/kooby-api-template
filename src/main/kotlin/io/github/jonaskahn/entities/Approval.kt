@@ -10,6 +10,7 @@ import java.time.Instant
 @Table(name = "approvals")
 open class Approval {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     open var id: Int? = null
 
@@ -36,4 +37,18 @@ open class Approval {
     @Size(max = 4000)
     @Column(name = "comment", length = 4000)
     open var comment: String? = null
+
+    @ColumnDefault("current_timestamp()")
+    @Column(name = "created_at")
+    open var createdAt: Instant? = null
+
+    @Column(name = "created_by")
+    open var createdBy: Long? = null
+
+    @ColumnDefault("current_timestamp()")
+    @Column(name = "updated_at")
+    open var updatedAt: Instant? = null
+
+    @Column(name = "updated_by")
+    open var updatedBy: Long? = null
 }

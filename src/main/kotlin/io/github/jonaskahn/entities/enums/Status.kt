@@ -2,7 +2,7 @@ package io.github.jonaskahn.entities.enums
 
 import com.fasterxml.jackson.annotation.JsonValue
 
-enum class Status(@get:JsonValue  val displayName: String, val id: Int, val description: String) {
+enum class Status( val displayName: String, @get:JsonValue  val id: Int, val description: String) {
     INACTIVATED("INACTIVATED", Code.INACTIVATED, "app.common.enum.status.inactive"),
     ACTIVATED("ACTIVATED", Code.ACTIVATED, "app.common.enum.status.active"),
     LOCK("LOCK", Code.LOCK, "app.common.enum.status.lock" ),

@@ -1,7 +1,8 @@
-package io.github.jonaskahn.repositories
+package io.github.jonaskahn.repositories.repo
 
 import com.google.inject.ImplementedBy
 import io.github.jonaskahn.entities.User
+import io.github.jonaskahn.repositories.impl.UserRepositoryImpl
 import io.github.jonaskahn.services.user.UserDto
 
 @ImplementedBy(UserRepositoryImpl::class)

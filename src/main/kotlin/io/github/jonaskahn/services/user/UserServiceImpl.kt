@@ -5,7 +5,7 @@ import io.github.jonaskahn.controllers.user.UserRegisterRequest
 import io.github.jonaskahn.entities.User
 import io.github.jonaskahn.entities.enums.Status
 import io.github.jonaskahn.exception.ShouldNeverOccurException
-import io.github.jonaskahn.repositories.UserRepository
+import io.github.jonaskahn.repositories.repo.UserRepository
 import io.github.jonaskahn.services.authen.PasswordEncoder
 import io.hypersistence.tsid.TSID
 import io.jooby.Context

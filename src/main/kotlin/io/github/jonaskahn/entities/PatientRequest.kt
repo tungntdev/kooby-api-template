@@ -12,8 +12,9 @@ import java.time.LocalDate
 
 @Entity
 @Table(name = "patient_request")
-open class PatientRequest : BaseEntity() {
+open class PatientRequest: BaseEntity() {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     open var id: Int? = null
 
@@ -75,7 +76,7 @@ open class PatientRequest : BaseEntity() {
     open var state: State? = State.PENDING
 
     @ColumnDefault("1")
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     @Convert(converter = StatusConverter::class)
     open var status: Status? = Status.ACTIVATED
 

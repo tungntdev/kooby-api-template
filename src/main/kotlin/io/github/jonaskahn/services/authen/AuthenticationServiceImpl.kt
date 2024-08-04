@@ -3,7 +3,7 @@ package io.github.jonaskahn.services.authen
 import io.github.jonaskahn.constants.Jwt
 import io.github.jonaskahn.constants.RedisNameSpace
 import io.github.jonaskahn.entities.enums.Status
-import io.github.jonaskahn.repositories.UserRepository
+import io.github.jonaskahn.repositories.repo.UserRepository
 import io.github.jonaskahn.services.user.UserInvalidPasswordException
 import io.github.jonaskahn.services.user.UserLockedException
 import io.github.jonaskahn.services.user.UserNotFoundException

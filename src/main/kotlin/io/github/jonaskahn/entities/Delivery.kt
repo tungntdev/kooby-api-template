@@ -3,6 +3,7 @@ package io.github.jonaskahn.entities
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
+import org.hibernate.annotations.ColumnDefault
 import java.time.Instant
 import java.time.LocalDate
 
@@ -44,12 +45,21 @@ open class Delivery {
     @Column(name = "delivery_date")
     open var deliveryDate: LocalDate? = null
 
+    @ColumnDefault("current_timestamp()")
     @Column(name = "created_at")
     open var createdAt: Instant? = null
 
+    @ColumnDefault("current_timestamp()")
     @Column(name = "updated_at")
     open var updatedAt: Instant? = null
 
+    @ColumnDefault("1")
     @Column(name = "status")
-    open var status: Int? = null
+    open var status: Byte? = null
+
+    @Column(name = "created_by")
+    open var createdBy: Long? = null
+
+    @Column(name = "updated_by")
+    open var updatedBy: Long? = null
 }

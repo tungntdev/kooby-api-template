@@ -8,7 +8,7 @@ import org.hibernate.annotations.ColumnDefault
 
 @Entity
 @Table(name = "province")
-open class Province{
+open class Province: BaseEntity() {
     @Id
     @Column(name = "id", nullable = false)
     open var id: Int? = null
@@ -20,6 +20,5 @@ open class Province{
     @ColumnDefault("1")
     @Column(name = "status")
     @Convert(converter = StatusConverter::class)
-    open var status: Status = Status.ACTIVATED
-
+    open var status: Status? = Status.ACTIVATED
 }

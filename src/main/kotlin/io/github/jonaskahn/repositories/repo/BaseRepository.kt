@@ -1,8 +1,8 @@
-package io.github.jonaskahn.repositories
+package io.github.jonaskahn.repositories.repo
 
 import io.github.jonaskahn.entities.BaseEntity
 
-interface BaseRepository<Entity , ID> {
+interface BaseRepository<Entity: BaseEntity , ID> {
     fun create(e: Entity)
 
     fun update(e: Entity)
@@ -14,4 +14,6 @@ interface BaseRepository<Entity , ID> {
     fun findById(id: ID): Entity?
 
     fun findAll(): List<Entity>?
+
+    fun findWithPagination(offset: Int, limit: Int): List<Entity>?
 }

@@ -28,4 +28,18 @@ open class Assignment {
     @ColumnDefault("1")
     @Column(name = "status")
     open var status: Byte? = null
+
+    @ColumnDefault("current_timestamp()")
+    @Column(name = "created_at")
+    open var createdAt: Instant? = null
+
+    @Column(name = "created_by")
+    open var createdBy: Long? = null
+
+    @ColumnDefault("current_timestamp()")
+    @Column(name = "updated_at")
+    open var updatedAt: Instant? = null
+
+    @Column(name = "updated_by")
+    open var updatedBy: Long? = null
 }
