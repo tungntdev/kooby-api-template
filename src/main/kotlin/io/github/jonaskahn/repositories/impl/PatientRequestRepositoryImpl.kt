@@ -13,38 +13,38 @@ class PatientRequestRepositoryImpl @Inject constructor(
     context: Context
 ): BaseRepositoryImpl<PatientRequest, Long>(entityManager, PatientRequest::class.java, context) , PatientRequestRepository {
     override fun findByKeywordWithPagination(keyword: String, offset: Int, limit: Int): PaginationResult<PatientRequest> {
-        val criteriaBuilder = entityManager.criteriaBuilder
-        val criteriaQuery = criteriaBuilder.createQuery(PatientRequest::class.java)
-        val root = criteriaQuery.from(PatientRequest::class.java)
-
         val likeKeyword = "%${keyword.trim()}%"
-        val predicate = criteriaBuilder.or(
-            criteriaBuilder.like(root.get<String>("numberOrder").`as`(String::class.java), likeKeyword),
-            criteriaBuilder.like(root.get<String>("patientNumber"), likeKeyword),
-            criteriaBuilder.like(root.get<String>("patientName"), likeKeyword),
-            criteriaBuilder.like(root.get<String>("medicineCode"), likeKeyword)
-        )
 
-        val statusCondition = criteriaBuilder.equal(root.get<Status>("status"), Status.ACTIVATED)
-        criteriaQuery.select(root).where(criteriaBuilder.and(predicate, statusCondition))
-
-        // Get total items count
-        val countQuery = criteriaBuilder.createQuery(Long::class.java)
-        countQuery.select(criteriaBuilder.count(root))
-        countQuery.where(criteriaBuilder.and(predicate, statusCondition))
-        val totalItem = entityManager.createQuery(countQuery).singleResult
-
-        // Get paginated results
-        val query = entityManager.createQuery(criteriaQuery)
+        val queryStr = """
+            SELECT pr FROM PatientRequest pr
+            WHERE (CAST(pr.numberOrder AS string) LIKE :keyword 
+                OR pr.patientNumber LIKE :keyword 
+                OR pr.patientName LIKE :keyword 
+                OR pr.medicineCode LIKE :keyword)
+                AND pr.status = :status
+        """
+        val query = entityManager.createQuery(queryStr, PatientRequest::class.java)
+        query.setParameter("keyword", likeKeyword)
+        query.setParameter("status", Status.ACTIVATED)
         query.firstResult = offset
         query.maxResults = limit
+
         val data = query.resultList
 
-        val totalPage = if (totalItem % limit == 0L) {
-            (totalItem / limit).toInt()
-        } else {
-            (totalItem / limit).toInt() + 1
-        }
+        val countQueryStr = """
+            SELECT COUNT(pr) FROM PatientRequest pr
+            WHERE (CAST(pr.numberOrder AS string) LIKE :keyword 
+                OR pr.patientNumber LIKE :keyword 
+                OR pr.patientName LIKE :keyword 
+                OR pr.medicineCode LIKE :keyword)
+                AND pr.status = :status
+        """
+        val countQuery = entityManager.createQuery(countQueryStr, Long::class.javaObjectType)
+        countQuery.setParameter("keyword", likeKeyword)
+        countQuery.setParameter("status", Status.ACTIVATED)
+
+        val totalItem = countQuery.singleResult
+        val totalPage = (totalItem / limit + if (totalItem % limit == 0L) 0 else 1).toInt()
         val currentPage = (offset / limit) + 1
         val currentItem = data.size
 
@@ -56,6 +56,7 @@ class PatientRequestRepositoryImpl @Inject constructor(
             data = data
         )
     }
+
 
     override fun countByKeyword(keyword: String): Long {
         TODO("Not yet implemented")

@@ -1,5 +1,7 @@
 package io.github.jonaskahn.services.address
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import io.github.jonaskahn.assistant.jackson.MessageJsonSerializer
 import io.github.jonaskahn.entities.enums.Status
 open class ProvinceDto {
 
@@ -12,5 +14,7 @@ open class ProvinceDto {
             field = value
             this.statusName = value?.displayName
         }
+
+    @JsonSerialize(using = MessageJsonSerializer::class)
     open var statusName: String? = null
 }

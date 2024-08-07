@@ -1,5 +1,6 @@
 package io.github.jonaskahn.assistant
 
+import io.github.jonaskahn.middlewares.context.LanguageContextHolder
 import org.slf4j.LoggerFactory
 import java.text.MessageFormat
 import java.util.*
@@ -28,5 +29,11 @@ class Language {
                 return key
             }
         }
+
+        fun of(key: String?, vararg variables: Any?): String? {
+            val language = LanguageContextHolder.getLanguage()
+            return this.of(language, key, *variables)
+        }
+
     }
 }
